@@ -9,7 +9,7 @@ type Props = {
   dataKey: string;
   number: number | string;
   percentage: number;
-  chartData: object[];
+  chartData: object[]; 
 };
 
 export const ChartBox = (props: Props) => {

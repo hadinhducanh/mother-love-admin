@@ -12,11 +12,11 @@ function App() {
         <div className="menuContainer">
           <Menu />
         </div>
-        <div className="contenContainer">
+        <div className="contentContainer">
           <Outlet />
         </div>
       </div>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 }
