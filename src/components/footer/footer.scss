@@ -1,0 +1,21 @@
+.footer {
+    position: fixed; /* Fixed positioning */
+    bottom: 0; /* Stick to the bottom */
+    left: 0; /* Align to the left */
+    width: 100%; /* Full width */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+  
+    span {
+      &:first-child {
+        font-weight: bold;
+      }
+  
+      &:last-child {
+        font-size: 14px;
+      }
+    }
+  }
+  
