@@ -9,12 +9,12 @@ export const menu = [
         url: "/",
         icon: "home.svg",
       },
-      {
-        id: 2,
-        title: "Profile",
-        url: "/users/1",
-        icon: "user.svg",
-      },
+      // {
+      //   id: 2,
+      //   title: "Profile",
+      //   url: "/users/1",
+      //   icon: "user.svg",
+      // },
     ],
   },
   {
@@ -33,21 +33,20 @@ export const menu = [
         url: "/products",
         icon: "product.svg",
       },
-      {
-        id: 3,
-        title: "Orders",
-        url: "/orders",
-        icon: "order.svg",
-      },
-      {
-        id: 4,
-        title: "Posts",
-        url: "/posts",
-        icon: "post2.svg",
-      },
+  //    {
+  //       id: 3,
+  //       title: "Orders",
+  //       url: "/orders",
+  //       icon: "order.svg",
+  //     },
+  //     {
+  //       id: 4,
+  //       title: "Posts",
+  //       url: "/posts", 
+  //       icon: "post2.svg",
+  //     },
     ],
   },
-  
   {
     id: 3,
     title: "Maintenance",
@@ -128,7 +127,7 @@ export const chartBoxUser = {
     { name: "Wed", users: 700 },
     { name: "Thu", users: 400 },
     { name: "Fri", users: 500 },
-    { name: "Sat", users: 900 },
+    { name: "Sat", users: 450 },
   ],
 };
 

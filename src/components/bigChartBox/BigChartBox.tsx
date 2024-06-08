@@ -11,45 +11,45 @@ import "./bigChartBox.scss";
 const data = [
   {
     name: "Sun",
-    books: 4000,
-    clothes: 2400,
-    electronic: 2400,
+    milk: 4000,
+    milk2: 2400,
+    milk3: 2400,
   },
   {
     name: "Mon",
-    books: 3000,
-    clothes: 1398,
-    electronic: 2210,
+    milk: 3000,
+    milk2: 1398,
+    milk3: 2210,
   },
   {
     name: "Tue",
-    books: 2000,
-    clothes: 9800,
-    electronic: 2290,
+    milk: 2000,
+    milk2: 9800,
+    milk3: 2290,
   },
   {
     name: "Wed",
-    books: 2780,
-    clothes: 3908,
-    electronic: 2000,
+    milk: 2780,
+    milk2: 3908,
+    milk3: 2000,
   },
   {
     name: "Thu",
-    books: 1890,
-    clothes: 4800,
-    electronic: 2181,
+    milk: 1890,
+    milk2: 4800,
+    milk3: 2181,
   },
   {
     name: "Fri",
-    books: 2390,
-    clothes: 3800,
-    electronic: 2500,
+    milk: 2390,
+    milk2: 3800,
+    milk3: 2500,
   },
   {
     name: "Sat",
-    books: 3490,
-    clothes: 4300,
-    electronic: 2100,
+    milk: 3490,
+    milk2: 4300,
+    milk3: 2100,
   },
 ];
 
@@ -73,21 +73,21 @@ export const BigChartBox = () => {
             <Tooltip />
             <Area
               type="monotone"
-              dataKey="electronic"
+              dataKey="milk3"
               stackId="1"
               stroke="#8884d8"
               fill="#8884d8"
             />
             <Area
               type="monotone"
-              dataKey="clothes"
+              dataKey="milk2"
               stackId="1"
               stroke="#82ca9d"
               fill="#82ca9d"
             />
             <Area
               type="monotone"
-              dataKey="books"
+              dataKey="milk"
               stackId="1"
               stroke="#ffc658"
               fill="#ffc658"
