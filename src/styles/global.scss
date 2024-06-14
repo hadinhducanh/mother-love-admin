@@ -14,7 +14,7 @@ a {
 
 .main {
   font-family: "Inter", sans-serif;
-  background-color: $main-bg;
+
   color: $main-color;
   height: 100vh; 
   width: 100%; 
@@ -22,12 +22,16 @@ a {
 
 .container {
   display: flex;
+  margin-left: 0;
+  padding-left: 0;
+  width: 100%;
 }
 
 .menuContainer {
-  width: 10%;
+  width: 20%;
   padding: 5px 20px;
   border-right: 2px solid $soft-bg;
+  // background-color: #f9c3c3;
 
   @include lg{
     width: max-content;
