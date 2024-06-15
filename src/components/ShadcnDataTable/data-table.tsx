@@ -28,11 +28,13 @@ import { DataTableToolbar } from "./data-table-toolbar";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  searchKey: string;
 }
 
 export function ShadDataTable<TData, TValue>({
   columns,
   data,
+  searchKey,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -65,7 +67,7 @@ export function ShadDataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} searchKey={searchKey} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

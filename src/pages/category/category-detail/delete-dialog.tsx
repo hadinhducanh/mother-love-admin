@@ -7,17 +7,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PaymentType } from "../schema";
 import { Button } from "@/components/ui/button";
+import { ProductType } from "@/schema/productSchema";
 
 type DeleteProps = {
-  payment: PaymentType;
+  product: ProductType;
   isOpen: boolean;
   showActionToggle: (open: boolean) => void;
 };
 
 export default function DeleteDialog({
-  payment,
+  product,
   isOpen,
   showActionToggle,
 }: DeleteProps) {
@@ -27,14 +27,14 @@ export default function DeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. You are about to delete Payment
-            Details of <b>{payment.fullName}</b>
+            This action cannot be undone. You are about to delete product
+            Details of <b>{product.productName}</b>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <Button
-            variant='destructive'
+            variant="destructive"
             onClick={() => {
               showActionToggle(false);
             }}

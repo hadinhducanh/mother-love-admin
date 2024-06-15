@@ -22,41 +22,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { statuses } from "@/components/ShadcnDataTable/filters";
+import { ProductType } from "@/schema/productSchema";
 
 type EditProps = {
-  payment: PaymentType;
+  product: ProductType;
 };
-const paymentSchema = z.object({
-  id: z.number(),
-  amount: z.number(),
-  status: z.enum(["backlog", "todo", "in progress", "done", "canceled"]),
-  email: z.string(),
-  fullName: z.string(),
-});
-type PaymentType = z.infer<typeof paymentSchema>;
 
 const editSchema = z.object({
-  id: z.number(),
-  fullName: z.string().min(1, { message: "Full Name Required" }),
-  email: z
-    .string()
-    .min(1, { message: "Email is Required" })
-    .email({ message: "Must be a valid Email" }),
-  amount: z.number(),
-  status: z.enum(["backlog", "todo", "in progress", "done", "canceled"]),
+  productId: z.number(),
+  productName: z.string().min(1, { message: "Product Name Required" }),
+  description: z.string(),
+  price: z.coerce.number().refine((value) => value > 0, {
+    message: "Price must be greater than 0.",
+  }),
+  status: z.number(),
+  image: z.string(),
+  categoryId: z.coerce.number().refine((value) => value > 0, {
+    message: "Category Required.",
+  }),
+  brandId: z.coerce.number().refine((value) => value > 0, {
+    message: "Brand Required.",
+  }),
 });
 
 type editSchemaType = z.infer<typeof editSchema>;
 
-export default function EditDialog({ payment }: EditProps) {
+export default function EditDialog({ product }: EditProps) {
   const form = useForm<editSchemaType>({
     resolver: zodResolver(editSchema),
     defaultValues: {
-      id: payment.id,
-      fullName: payment.fullName,
-      email: payment.email,
-      amount: payment.amount,
-      status: payment.status,
+      productId: product.productId,
+      productName: product.productName,
+      description: product.description,
+      price: product.price,
+      status: product.status,
+      image: product.image,
+      categoryId: product.category.categoryId,
+      brandId: product.brand.brandId,
     },
   });
 
@@ -66,17 +68,17 @@ export default function EditDialog({ payment }: EditProps) {
   return (
     <div>
       <DialogHeader>
-        <DialogTitle>Edit Payment Details</DialogTitle>
+        <DialogTitle>Edit Product Details</DialogTitle>
       </DialogHeader>
       <div className="py-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3">
             <FormField
               control={form.control}
-              name="fullName"
+              name="productName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>Product name</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -86,12 +88,12 @@ export default function EditDialog({ payment }: EditProps) {
             />
             <FormField
               control={form.control}
-              name="email"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input type="email" {...field} />
+                    <Input type="text" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,10 +101,10 @@ export default function EditDialog({ payment }: EditProps) {
             />
             <FormField
               control={form.control}
-              name="amount"
+              name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel>Price</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
@@ -118,7 +120,7 @@ export default function EditDialog({ payment }: EditProps) {
                   <FormLabel>Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={field.value.toString()}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -138,6 +140,32 @@ export default function EditDialog({ payment }: EditProps) {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="brandId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Brand</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

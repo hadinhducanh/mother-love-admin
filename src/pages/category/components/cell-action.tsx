@@ -12,16 +12,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { toast } from "react-hot-toast";
-import { ProductColumn } from "./columns";
 import { useParams, useNavigate } from "react-router-dom";
-// import ViewDialog from "../dialogs/view-dialog";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { productSchema } from "@/schema/productSchema";
-import EditDialog from "../product-detail/edit-dialog";
-// import ViewDialog from "../dialogs/view-dialog";
+import EditDialog from "../category-detail/edit-category-dialog";
+import { CategoryColumn } from "./columns";
+import { categorySchema } from "@/schema/categorySchema";
 
 interface CellActionProps {
-  data: ProductColumn;
+  data: CategoryColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -32,7 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   );
   const params = useParams();
   const navigate = useNavigate();
-  const product = productSchema.parse(data);
+  const category = categorySchema.parse(data);
 
   const onConfirm = async () => {
     try {
@@ -53,7 +52,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   //   setDialogContent(<ViewDialog product={product} />);
   // };
   const handleEditClick = () => {
-    setDialogContent(<EditDialog product={product} />);
+    setDialogContent(<EditDialog category={category} />);
   };
 
   return (
@@ -69,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() =>
-              navigator.clipboard.writeText(data.productId.toString())
+              navigator.clipboard.writeText(data.categoryId.toString())
             }
           >
             <Icons.copy className="mr-2 h-4 w-4" />

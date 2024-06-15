@@ -9,28 +9,15 @@ import { Plus } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import { useNavigate } from "react-router-dom";
 
-interface Product {
-  productId: number;
-  productName: string;
-  description: string;
-  price: number;
-  status: number;
-  image: string;
-  category: {
-    categoryId: number;
-    categoryName: string;
-  };
-  brand: {
-    brandId: number;
-    brandName: string;
-    image: string;
-  };
+interface Category {
+  categoryId: number;
+  categoryName: string;
 }
 
 interface FetchProductsResponse {
-  data: Product[];
+  data: Category[];
   total: number;
-  content: Product[];
+  content: Category[];
 }
 
 const fetchProducts = async (
@@ -39,7 +26,7 @@ const fetchProducts = async (
   sortBy: string,
   sortDir: "asc" | "desc"
 ): Promise<FetchProductsResponse> => {
-  const response = await axios.get(`http://localhost:8080/api/v1/product`, {
+  const response = await axios.get(`http://localhost:8080/api/v1/categories`, {
     params: {
       pageNo,
       pageSize,
@@ -50,11 +37,11 @@ const fetchProducts = async (
   return response.data;
 };
 
-export const Products = () => {
-  const [data, setData] = useState<Product[]>([]);
+export const Category = () => {
+  const [data, setData] = useState<Category[]>([]);
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("productId");
+  const [sortBy, setSortBy] = useState("categoryId");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [totalRows, setTotalRows] = useState(0);
   const navigate = useNavigate();
@@ -74,18 +61,18 @@ export const Products = () => {
     <>
       <div className="flex items-center justify-between pt-4">
         <Heading
-          title={`Product (${Object.keys(data).length})`}
-          description="Manage Product in the shop"
+          title={`Category (${Object.keys(data).length})`}
+          description="Manage Category in the shop"
         />
 
-        <Button onClick={() => navigate("/newProduct")}>
+        <Button onClick={() => navigate("/newCategory")}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
         </Button>
       </div>
       <Separator />
       <div className="containerS mx-auto py-4">
-        <ShadDataTable columns={columns} data={data} searchKey="productName" />
+        <ShadDataTable columns={columns} data={data} searchKey="categoryName" />
       </div>
     </>
   );
