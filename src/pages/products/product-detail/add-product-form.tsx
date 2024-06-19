@@ -25,7 +25,9 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { useState } from "react";
-import toast, { useToaster } from "react-hot-toast";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 // type EditProps = {
 //   product: ProductType;
@@ -44,17 +46,25 @@ const editSchema = z.object({
   }),
   status: z.number(),
   image: z.string(),
-  categoryId: z.coerce.number().refine((value) => value > 0, {
-    message: "Category Required.",
+  category: z.object({
+    categoryId: z.coerce.number().refine((value) => value > 0, {
+      message: "Category Required.",
+    }),
   }),
-  brandId: z.coerce.number().refine((value) => value > 0, {
-    message: "Brand Required.",
+
+  brand: z.object({
+    brandId: z.coerce.number().refine((value) => value > 0, {
+      message: "Brand Required.",
+    }),
   }),
 });
 
 type editSchemaType = z.infer<typeof editSchema>;
 
 export const AddProduct: React.FC<ManageProductForm> = () => {
+  const accessToken = Cookies.get("accessToken");
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const form = useForm<editSchemaType>({
     resolver: zodResolver(editSchema),
     defaultValues: {
@@ -64,8 +74,12 @@ export const AddProduct: React.FC<ManageProductForm> = () => {
       price: 0,
       status: 1,
       image: "",
-      categoryId: 0,
-      brandId: 0,
+      category: {
+        categoryId: 0,
+      },
+      brand: {
+        brandId: 0,
+      },
     },
   });
 
@@ -76,42 +90,24 @@ export const AddProduct: React.FC<ManageProductForm> = () => {
         values,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0dnR2YW4iLCJpYXQiOjE3MTgzNzgxOTMsImV4cCI6MTcxODQ2NDU5M30.tk0mwpZAI8AFZkOevF4nNrHN0nPo8bYMvSA9errHLTw3s4XGzg-2a2cnQuU2-Bj2"
-            )}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      toast.success("Create new Product successfully!");
+      navigate("/products");
+      toast({
+        title: "Create new Product successfully!",
+      });
     } catch (error: any) {
-      if (error.response.status === 401) {
-        try {
-          const refreshResponse = await axios.post(
-            "http://localhost:8080/api/v1/auth/refresh_token",
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem(
-                  "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ0dnR2YW4iLCJpYXQiOjE3MTgzNzgxOTMsImV4cCI6MTcxODk4Mjk5M30.voo2Ue5H_LDyykV0Xm9ObModBGzRwHMmxRNe_MBPlvWpWt7kv5KC3FabutOYX4Hi"
-                )}`,
-              },
-            }
-          );
-          localStorage.setItem(
-            "access_token",
-            refreshResponse.data.access_token
-          );
-          localStorage.setItem(
-            "refresh_token",
-            refreshResponse.data.refresh_token
-          );
-          onSubmit(values); // Retry original request
-        } catch (refreshError: any) {
-          toast.error("Failed to refresh token. Please log in again.");
-          console.error("Error refreshing token:", refreshError);
-        }
+      if (error.response) {
+        // setToastMessage(error.response.data.message || "An error occurred");
+        console.error("Error adding product:", error.response.data);
       } else {
-        toast.error("Failed to create product.");
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        toast({
+          title: errorMessage,
+        });
         console.error("Error adding product:", error);
       }
     }
@@ -206,7 +202,7 @@ export const AddProduct: React.FC<ManageProductForm> = () => {
               />
               <FormField
                 control={form.control}
-                name="categoryId"
+                name="category.categoryId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
@@ -219,7 +215,7 @@ export const AddProduct: React.FC<ManageProductForm> = () => {
               />
               <FormField
                 control={form.control}
-                name="brandId"
+                name="brand.brandId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Brand</FormLabel>

@@ -23,6 +23,12 @@ import { Button } from "@/components/ui/button";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { statuses } from "@/components/ShadcnDataTable/filters";
 import { ProductType } from "@/schema/productSchema";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import Cookies from "js-cookie";
+import { refreshTokenIfNeeded } from "@/pages/Auth/auth";
 
 type EditProps = {
   product: ProductType;
@@ -37,17 +43,25 @@ const editSchema = z.object({
   }),
   status: z.number(),
   image: z.string(),
-  categoryId: z.coerce.number().refine((value) => value > 0, {
-    message: "Category Required.",
+  category: z.object({
+    categoryId: z.coerce.number().refine((value) => value > 0, {
+      message: "Category Required.",
+    }),
   }),
-  brandId: z.coerce.number().refine((value) => value > 0, {
-    message: "Brand Required.",
+
+  brand: z.object({
+    brandId: z.coerce.number().refine((value) => value > 0, {
+      message: "Brand Required.",
+    }),
   }),
 });
 
 type editSchemaType = z.infer<typeof editSchema>;
 
 export default function EditDialog({ product }: EditProps) {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const accessToken = Cookies.get("accessToken");
   const form = useForm<editSchemaType>({
     resolver: zodResolver(editSchema),
     defaultValues: {
@@ -57,14 +71,50 @@ export default function EditDialog({ product }: EditProps) {
       price: product.price,
       status: product.status,
       image: product.image,
-      categoryId: product.category.categoryId,
-      brandId: product.brand.brandId,
+      category: {
+        categoryId: product.category.categoryId,
+      },
+      brand: {
+        brandId: product.brand.brandId,
+      },
     },
   });
 
-  function onSubmit(values: editSchemaType) {
-    console.log(values);
-  }
+  const onSubmit = async (values: editSchemaType) => {
+    try {
+      const isTokenValid = await refreshTokenIfNeeded();
+      if (!isTokenValid) {
+        toast({
+          title: "Session expired. Please login again.",
+        });
+        navigate("/login");
+        return;
+      }
+
+      const currentAccessToken = Cookies.get("accessToken");
+      await axios.put("http://localhost:8080/api/v1/product/update", values, {
+        headers: {
+          Authorization: `Bearer ${currentAccessToken}`,
+        },
+      });
+      toast({
+        title: "Update Product successfully!",
+      });
+      window.location.reload();
+    } catch (error: any) {
+      if (error.response) {
+        // setToastMessage(error.response.data.message || "An error occurred");
+        console.error("Error adding product:", error.response.data);
+      } else {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        toast({
+          title: errorMessage,
+        });
+        console.error("Error adding product:", error);
+      }
+    }
+  };
   return (
     <div>
       <DialogHeader>
@@ -146,7 +196,7 @@ export default function EditDialog({ product }: EditProps) {
             />
             <FormField
               control={form.control}
-              name="categoryId"
+              name="category.categoryId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
@@ -159,7 +209,7 @@ export default function EditDialog({ product }: EditProps) {
             />
             <FormField
               control={form.control}
-              name="brandId"
+              name="brand.brandId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Brand</FormLabel>
@@ -170,7 +220,11 @@ export default function EditDialog({ product }: EditProps) {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-2 w-full">
+            <Button
+              type="submit"
+              className="mt-2 w-full"
+              onClick={() => onSubmit}
+            >
               Update Details
             </Button>
           </form>

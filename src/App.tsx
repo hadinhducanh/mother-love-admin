@@ -3,10 +3,11 @@ import { Navbar } from "./components/navbar/Navbar";
 import { Menu } from "./components/menu/Menu";
 import { Footer } from "./components/footer/Footer";
 import "./styles/global.scss";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/';
+  const isLoginPage = location.pathname === "/";
 
   return (
     <div className="main">
@@ -14,11 +15,12 @@ function App() {
       <div className="container">
         {!isLoginPage && (
           <div className="menuContainer">
-            <Menu /> 
+            <Menu />
           </div>
         )}
         <div className="contentContainer">
           <Outlet /> {/* Render the matched child route's component */}
+          <Toaster />
         </div>
       </div>
       {!isLoginPage && <Footer />} {/* Conditionally render Footer */}

@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 interface AlertModalProps {
   isOpen: boolean;
   onClose: () => void;
-  //   onConfirm: () => void;
+  onConfirm: () => void;
   loading: boolean;
 }
 
 export const AlertModal: React.FC<AlertModalProps> = ({
   isOpen,
   onClose,
-  //   onConfirm,
+  onConfirm,
   loading,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -37,7 +37,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         <Button disabled={loading} variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button disabled={loading} variant="destructive">
+        <Button disabled={loading} variant="destructive" onClick={onConfirm}>
           Continue
         </Button>
       </div>
